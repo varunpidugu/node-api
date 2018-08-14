@@ -36,7 +36,7 @@ app.get('/todos/:id', (req, res) => {
 	var id = req.params.id;
 
 	if (!ObjectID.isValid(id)) {
-		res.status(404).send();
+		res.status(404).send("Invalid ID!");
 	}
 
 	Todo.findById(id).then((todo) => {
@@ -50,17 +50,34 @@ app.get('/todos/:id', (req, res) => {
 	//validate ID
 });
 
-// app.post('/users', (req, res) => {
-// 	var user = new User({
-// 		email: req.body.email
-// 	});
+app.get('/users/:id', (req, res) => {
+	var id = req.params.id;
 
-// 	user.save().then((doc) => {
-// 		res.send(doc);
-// 	}, (e) => {
-// 		res.status(400).send(e);
-// 	})
-// })
+	if (!ObjectID.isValid(id)){
+	 return res.status(404).send('Invalid ID!');
+	}
+
+	User.findById(id).then((user) => {
+		if (!user) return res.status(404).send();
+
+		res.send({user});
+
+	}).catch((e) => {
+		res.status(400).send();
+	})
+})
+
+app.post('/users', (req, res) => {
+	var user = new User({
+		email: req.body.email
+	});
+
+	user.save().then((doc) => {
+		res.send(doc);
+	}, (e) => {
+		res.status(400).send(e);
+	})
+})
 
 app.listen(3000, () => {
   console.log('Started on port 3000');
