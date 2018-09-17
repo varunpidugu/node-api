@@ -105,6 +105,31 @@ describe('GET /todos/:id', () => {
 	})
 });
 
+describe('PATCH /todos/:id', () => {
+
+
+	it('should modify a valid todo', (done) => {
+
+		request(app)
+			.patch(`/todos/${todos[0]._id.toHexString()}`)
+			.send({completed: true})
+			.expect(200)
+			.expect((res) => {
+				expect(res.body.todo.completed).toBe(true);
+			})
+			.end(done);
+	})
+
+	it('should return with status 404 with invalid id', (done) => {
+
+		request(app)
+			.patch(`/todos/${new ObjectID().toHexString()};`)
+			.send({completed: true})
+			.expect(404)
+			.end(done)
+	})
+})
+
 describe('DELETE /todos/:id', () => {
 
 	it('should delete a todo', (done) => {
